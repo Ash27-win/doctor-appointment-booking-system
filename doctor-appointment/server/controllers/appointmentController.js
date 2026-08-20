@@ -93,7 +93,9 @@ exports.getCustomerAppointments = async (req, res) => {
         a.created_at,
         d.name AS doctor_name, 
         d.specialization AS doctor_specialization,
-        d.photo AS doctor_photo
+        d.photo AS doctor_photo,
+        (SELECT COUNT(*) FROM prescriptions p WHERE p.appointment_id = a.appointment_id) AS has_prescription,
+        (SELECT COUNT(*) FROM bills b WHERE b.appointment_id = a.appointment_id) AS has_bill
       FROM appointments a
       JOIN doctors d ON a.doctor_id = d.doctor_id
       WHERE a.customer_id = ?

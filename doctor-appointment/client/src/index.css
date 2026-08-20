@@ -270,3 +270,65 @@ h1, h2, h3, h4, h5, h6 {
 .custom-toast.error { border-left-color: var(--color-rejected); }
 .custom-toast.warning { border-left-color: var(--color-pending); }
 .custom-toast.info { border-left-color: var(--color-accepted); }
+
+/* Print Media CSS styling rules */
+@media print {
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Hide all interactive components, navigation, footers, buttons */
+  .custom-navbar,
+  footer,
+  .btn,
+  .list-group,
+  .modal-header,
+  .modal-footer,
+  .no-print,
+  .modal-backdrop,
+  main > :not(.printable-area) {
+    display: none !important;
+  }
+
+  /* Make modal content plain for printing */
+  .modal {
+    position: relative !important;
+    display: block !important;
+    background: none !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  .modal-dialog {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .modal-content {
+    box-shadow: none !important;
+    border: none !important;
+    background: transparent !important;
+  }
+
+  /* Force display print layouts */
+  .print-only {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  .printable-area {
+    display: block !important;
+    visibility: visible !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+
+.print-only {
+  display: none;
+}

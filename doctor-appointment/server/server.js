@@ -9,6 +9,9 @@ require('./config/db');
 const customerRoutes = require('./routes/customerRoutes');
 const doctorRoutes = require('./routes/doctorRoutes');
 const appointmentRoutes = require('./routes/appointmentRoutes');
+const prescriptionRoutes = require('./routes/prescriptionRoutes');
+const testRoutes = require('./routes/testRoutes');
+const billRoutes = require('./routes/billRoutes');
 
 const app = express();
 
@@ -20,6 +23,9 @@ app.use(express.json());
 app.use('/api/customer', customerRoutes); // Customer Auth
 app.use('/api', doctorRoutes);             // Doctor Auth & Public List
 app.use('/api', appointmentRoutes);        // Appointment Operations
+app.use('/api', prescriptionRoutes);       // Prescriptions
+app.use('/api', testRoutes);               // Lab Tests / Scans
+app.use('/api', billRoutes);               // Billing Systems
 
 // Custom API 404 Route
 app.use('/api/*', (req, res) => {
