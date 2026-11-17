@@ -1,0 +1,375 @@
+{
+  "info": {
+    "_postman_id": "caresync-appointment-booking-collection",
+    "name": "CareSync Doctor Appointment Booking API",
+    "description": "Complete Postman Collection for CareSync Doctor Appointment Booking Platform. Covers Patient, Doctor, Admin, Booking, Prescriptions, Tests, and Billing modules.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000" },
+    { "key": "customerToken", "value": "" },
+    { "key": "doctorToken", "value": "" },
+    { "key": "adminToken", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1. Admin Module",
+      "item": [
+        {
+          "name": "Admin Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) { pm.collectionVariables.set('adminToken', jsonData.token); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@hospital.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/admin/login", "host": ["{{baseUrl}}"], "path": ["api", "admin", "login"] }
+          }
+        },
+        {
+          "name": "Get Clinic Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/admin/stats", "host": ["{{baseUrl}}"], "path": ["api", "admin", "stats"] }
+          }
+        },
+        {
+          "name": "Get All Doctors (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/admin/doctors", "host": ["{{baseUrl}}"], "path": ["api", "admin", "doctors"] }
+          }
+        },
+        {
+          "name": "Onboard New Doctor",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dr. Samantha Reed\",\n  \"email\": \"samantha@hospital.com\",\n  \"password\": \"Doctor123!@#\",\n  \"specialization\": \"Gynecologist\",\n  \"experience\": 9,\n  \"available_days\": \"Monday, Wednesday, Friday\",\n  \"available_time\": \"10:00 AM - 02:00 PM\",\n  \"consultation_fee\": 650.00,\n  \"bio\": \"Senior consultant gynecologist specializing in prenatal care and women wellness.\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/admin/doctors", "host": ["{{baseUrl}}"], "path": ["api", "admin", "doctors"] }
+          }
+        },
+        {
+          "name": "Get All Hospital Appointments",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/admin/appointments", "host": ["{{baseUrl}}"], "path": ["api", "admin", "appointments"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Patient (Customer) Module",
+      "item": [
+        {
+          "name": "Register Patient",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Rohan Verma\",\n  \"email\": \"rohan.verma@example.com\",\n  \"phone\": \"9876543210\",\n  \"password\": \"RohanSecure123!\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/customer/register", "host": ["{{baseUrl}}"], "path": ["api", "customer", "register"] }
+          }
+        },
+        {
+          "name": "Patient Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) { pm.collectionVariables.set('customerToken', jsonData.token); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"rohan.verma@example.com\",\n  \"password\": \"RohanSecure123!\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/customer/login", "host": ["{{baseUrl}}"], "path": ["api", "customer", "login"] }
+          }
+        },
+        {
+          "name": "Get Patient Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/customer/profile", "host": ["{{baseUrl}}"], "path": ["api", "customer", "profile"] }
+          }
+        },
+        {
+          "name": "Update Patient Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Rohan Verma\",\n  \"phone\": \"9876543210\",\n  \"gender\": \"Male\",\n  \"blood_group\": \"O+\",\n  \"dob\": \"1994-06-15\",\n  \"address\": \"42 Indiranagar, Bangalore, Karnataka\",\n  \"emergency_contact\": \"Pooja Verma (Spouse) - 9876543211\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/customer/profile", "host": ["{{baseUrl}}"], "path": ["api", "customer", "profile"] }
+          }
+        },
+        {
+          "name": "Change Patient Password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"RohanSecure123!\",\n  \"newPassword\": \"RohanNewPass456@\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/customer/change-password", "host": ["{{baseUrl}}"], "path": ["api", "customer", "change-password"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Booking & Appointments Engine",
+      "item": [
+        {
+          "name": "Get All Doctors (Public)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/doctors", "host": ["{{baseUrl}}"], "path": ["api", "doctors"] }
+          }
+        },
+        {
+          "name": "Get Doctor Available Slots (Real-Time)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/doctors/1/available-slots?date=2026-11-09",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "doctors", "1", "available-slots"],
+              "query": [{ "key": "date", "value": "2026-11-09" }]
+            }
+          }
+        },
+        {
+          "name": "Book Consultation (Dynamic)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"doctor_id\": 1,\n  \"patient_name\": \"Rohan Verma\",\n  \"patient_age\": 32,\n  \"patient_gender\": \"Male\",\n  \"patient_phone\": \"9876543210\",\n  \"patient_email\": \"rohan.verma@example.com\",\n  \"appointment_date\": \"2026-11-09\",\n  \"appointment_time\": \"09:30 AM\",\n  \"symptoms\": \"Mild chest discomfort and elevated resting heart rate after exertion.\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/appointments", "host": ["{{baseUrl}}"], "path": ["api", "appointments"] }
+          }
+        },
+        {
+          "name": "Get Patient My Appointments",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/customer/appointments", "host": ["{{baseUrl}}"], "path": ["api", "customer", "appointments"] }
+          }
+        },
+        {
+          "name": "Reschedule Appointment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"appointment_date\": \"2026-11-09\",\n  \"appointment_time\": \"11:00 AM\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/appointments/1/reschedule", "host": ["{{baseUrl}}"], "path": ["api", "appointments", "1", "reschedule"] }
+          }
+        },
+        {
+          "name": "Cancel Appointment with Reason",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cancellation_reason\": \"Work emergency came up, need to reschedule later.\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/appointments/1/cancel", "host": ["{{baseUrl}}"], "path": ["api", "appointments", "1", "cancel"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Doctor Module & Clinical Workspace",
+      "item": [
+        {
+          "name": "Doctor Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) { pm.collectionVariables.set('doctorToken', jsonData.token); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"arun@hospital.com\",\n  \"password\": \"doctor123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/doctor/login", "host": ["{{baseUrl}}"], "path": ["api", "doctor", "login"] }
+          }
+        },
+        {
+          "name": "Get Doctor Appointments",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{doctorToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/doctor/appointments", "host": ["{{baseUrl}}"], "path": ["api", "doctor", "appointments"] }
+          }
+        },
+        {
+          "name": "Update Appointment Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{doctorToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Accepted\",\n  \"reason\": \"Consultation confirmed for slot\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/appointments/1/status", "host": ["{{baseUrl}}"], "path": ["api", "appointments", "1", "status"] }
+          }
+        },
+        {
+          "name": "Create Medical Prescription",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{doctorToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"appointment_id\": 1,\n  \"diagnosis\": \"Mild sinus tachycardia secondary to fatigue\",\n  \"notes\": \"Ensure adequate hydration and 8 hours of sleep. Avoid caffeinated beverages.\",\n  \"prescription_date\": \"2026-11-09\",\n  \"medicines\": [\n    {\n      \"medicine_name\": \"Metoprolol Tartrate\",\n      \"dosage\": \"25mg\",\n      \"frequency\": \"1-0-0\",\n      \"duration\": \"14 days\",\n      \"timing\": \"After food\",\n      \"instructions\": \"Take once every morning with water\"\n    },\n    {\n      \"medicine_name\": \"Multivitamin & Minerals\",\n      \"dosage\": \"1 capsule\",\n      \"frequency\": \"0-1-0\",\n      \"duration\": \"30 days\",\n      \"timing\": \"After food\",\n      \"instructions\": \"Daily dietary supplement\"\n    }\n  ]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/prescriptions", "host": ["{{baseUrl}}"], "path": ["api", "prescriptions"] }
+          }
+        },
+        {
+          "name": "Order Diagnostic Test / Scan",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{doctorToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"appointment_id\": 1,\n  \"test_name\": \"Electrocardiogram (12-Lead ECG)\",\n  \"test_type\": \"Laboratory\",\n  \"priority\": \"Routine\",\n  \"instructions\": \"Perform fasting ECG scan\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/tests", "host": ["{{baseUrl}}"], "path": ["api", "tests"] }
+          }
+        },
+        {
+          "name": "Generate Consultation Invoice",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{doctorToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"appointment_id\": 1,\n  \"consultation_fee\": 600.00,\n  \"medicine_charges\": 250.00,\n  \"lab_charges\": 400.00,\n  \"scan_charges\": 0.00,\n  \"other_charges\": 50.00,\n  \"discount\": 50.00,\n  \"tax\": 60.00,\n  \"payment_status\": \"Paid\",\n  \"payment_method\": \"UPI\",\n  \"bill_date\": \"2026-11-09\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/bills", "host": ["{{baseUrl}}"], "path": ["api", "bills"] }
+          }
+        },
+        {
+          "name": "Get Doctor Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{doctorToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/doctor/profile", "host": ["{{baseUrl}}"], "path": ["api", "doctor", "profile"] }
+          }
+        },
+        {
+          "name": "Update Doctor Schedule & Fees",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{doctorToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dr. Arun Kumar\",\n  \"specialization\": \"Cardiologist\",\n  \"experience\": 13,\n  \"available_days\": \"Monday, Wednesday, Friday, Saturday\",\n  \"available_time\": \"09:00 AM - 02:00 PM\",\n  \"consultation_fee\": 650.00,\n  \"bio\": \"Senior interventional cardiologist with 13 years of practice in coronary and preventive care.\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/doctor/profile", "host": ["{{baseUrl}}"], "path": ["api", "doctor", "profile"] }
+          }
+        }
+      ]
+    }
+  ]
+}
+
